@@ -49,7 +49,7 @@ impl Passport {
     }
 
     fn validate_hcl(&self) -> bool {
-        self.hcl.chars().next() == Some('#')
+        self.hcl.starts_with('#')
             && self
                 .hcl
                 .chars()
