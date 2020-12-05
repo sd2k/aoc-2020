@@ -1,4 +1,4 @@
-use std::{collections::HashSet, str::FromStr};
+use std::str::FromStr;
 
 use anyhow::{Context, Error, Result};
 
@@ -37,8 +37,8 @@ struct Seat {
 }
 
 impl Seat {
-    fn id(&self) -> u16 {
-        self.row.0 * 8 + self.column.0
+    fn id(&self) -> u32 {
+        (self.row.0 * 8 + self.column.0).into()
     }
 }
 
@@ -64,25 +64,22 @@ fn parse_input(input: &str) -> Vec<Seat> {
 }
 
 #[aoc(day5, part1)]
-fn part1(input: &[Seat]) -> u16 {
-    input.iter().map(Seat::id).max().unwrap()
+fn part1(input: &[Seat]) -> u32 {
+    input.iter().map(|s| s.id()).max().unwrap()
 }
 
 #[aoc(day5, part2)]
-fn part2(input: &[Seat]) -> u16 {
-    let mut min = None;
-    let mut max = None;
-    let mut all = HashSet::new();
-    for id in input.iter().map(Seat::id) {
-        if id <= min.unwrap_or(id) {
-            min = Some(id);
-        }
-        if id >= max.unwrap_or(id) {
-            max = Some(id);
-        }
-        all.insert(id);
-    }
-    (min.unwrap()..max.unwrap()).filter(|x| !all.contains(x)).next().unwrap()
+fn part2(input: &[Seat]) -> u32 {
+    // We can determine the missing number by calculating the sum of (min..max)
+    // and comparing it to the observed sum.
+    let (min, max, observed_sum, len) = input
+        .iter()
+        .map(|x| x.id())
+        .fold((u32::MAX, u32::MIN, 0, 0), |(min, max, sum, len), x| {
+            (min.min(x), max.max(x), sum + x, len + 1)
+        });
+    // Use Gauss's method for calculating the sum of an arithmetic series.
+    ((len + 1) * (min + max) / 2) - observed_sum
 }
 
 #[cfg(test)]
@@ -134,21 +131,9 @@ mod tests {
 
     #[test]
     fn seat_id() {
-        assert_eq!(
-            "FBFBBFFRLR".parse::<Seat>().unwrap().id(),
-            357,
-        );
-        assert_eq!(
-            "BFFFBBFRRR".parse::<Seat>().unwrap().id(),
-            567
-        );
-        assert_eq!(
-            "FFFBBBFRRR".parse::<Seat>().unwrap().id(),
-            119
-        );
-        assert_eq!(
-            "BBFFBBFRLL".parse::<Seat>().unwrap().id(),
-            820
-        );
+        assert_eq!("FBFBBFFRLR".parse::<Seat>().unwrap().id(), 357,);
+        assert_eq!("BFFFBBFRRR".parse::<Seat>().unwrap().id(), 567);
+        assert_eq!("FFFBBBFRRR".parse::<Seat>().unwrap().id(), 119);
+        assert_eq!("BBFFBBFRLL".parse::<Seat>().unwrap().id(), 820);
     }
 }
