@@ -37,7 +37,7 @@ struct Seat {
 }
 
 impl Seat {
-    fn id(&self) -> u32 {
+    fn id(self) -> u32 {
         (self.row.0 * 8 + self.column.0).into()
     }
 }

@@ -102,8 +102,7 @@ fn part1(input: &[Result<Passport>]) -> u32 {
 fn part2(input: &[Result<Passport>]) -> u32 {
     input
         .iter()
-        .filter_map(|x| x.as_ref().ok())
-        .map(|passport| passport.validate().map_or(0, |x| if x { 1 } else { 0 }))
+        .filter_map(|x| x.as_ref().ok().map(|passport| passport.validate().map_or(0, |x| if x { 1 } else { 0 })))
         .sum()
 }
 

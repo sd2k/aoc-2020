@@ -31,7 +31,7 @@ impl Group {
 impl FromStr for Group {
     type Err = Error;
     fn from_str(s: &str) -> Result<Self> {
-        Ok(s.lines().fold(Default::default(), |mut group, line| {
+        Ok(s.lines().fold(Group::default(), |mut group, line| {
             group.n += 1;
             line.bytes()
                 .map(|c| c as usize - 97)
@@ -48,12 +48,12 @@ fn parse_input(input: &str) -> Vec<Group> {
 
 #[aoc(day6, part1)]
 fn part1(input: &[Group]) -> u32 {
-    input.iter().map(|x| x.any()).sum()
+    input.iter().map(Group::any).sum()
 }
 
 #[aoc(day6, part2)]
 fn part2(input: &[Group]) -> u32 {
-    input.iter().map(|x| x.all()).sum()
+    input.iter().map(Group::all).sum()
 }
 
 #[cfg(test)]

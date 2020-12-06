@@ -23,7 +23,7 @@ fn find_triple_2020_expenses(expenses: &[u32]) -> [u32; 3] {
     v.sort_unstable();
     for x in &v {
         for y in v.iter().rev() {
-            for z in v.iter() {
+            for z in &v {
                 if x + y + z == 2020 {
                     return [*x, *y, *z];
                 }
