@@ -6,14 +6,14 @@ use aoc_runner_derive::{aoc, aoc_generator};
 
 struct Group {
     n: u8,
-    counts: [u8; 26]
+    counts: [u8; 26],
 }
 
 impl Default for Group {
     fn default() -> Self {
         Group {
             n: 0,
-            counts: [0; 26]
+            counts: [0; 26],
         }
     }
 }
@@ -24,7 +24,10 @@ impl Group {
     }
 
     fn all(&self) -> u32 {
-        self.counts.iter().map(|x| if *x == self.n { 1 } else { 0 }).sum()
+        self.counts
+            .iter()
+            .map(|x| if *x == self.n { 1 } else { 0 })
+            .sum()
     }
 }
 
